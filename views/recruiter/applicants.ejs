@@ -1,0 +1,42 @@
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3>Applicants for: <%= job.title %></h3>
+            <p class="text-muted"><%= job.company %> | Posted on: <%= job.createdAt.toDateString() %></p>
+            <a href="/recruiter/dashboard" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <% if (applications.length > 0) { %>
+            <% applications.forEach(application => { %>
+                <% const applicant = application.developer %>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title"><%= applicant.name %></h5>
+                                <span class="badge bg-primary">AI Score: <%= applicant.aiScore || 0 %></span>
+                            </div>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= applicant.email %></h6>
+                            <p class="card-text">
+                                <strong>Skills:</strong> <%= applicant.skills ? applicant.skills.join(', ') : 'No skills listed' %><br>
+                                <strong>Experience:</strong> <%= applicant.experience || 'No experience summary' %>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <% if (applicant.resumeUrl) { %>
+                                    <a href="<%= applicant.resumeUrl %>" target="_blank" class="btn btn-outline-info btn-sm">View Resume</a>
+                                <% } %>
+                                <small class="text-muted">Applied on: <%= application.date.toDateString() %></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="col-12 text-center">
+                <div class="alert alert-warning">No applications received for this job yet.</div>
+            </div>
+        <% } %>
+    </div>
+</div>

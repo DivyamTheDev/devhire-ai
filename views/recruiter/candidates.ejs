@@ -1,0 +1,31 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Candidate Discovery</h2>
+    <div class="row">
+        <% if (candidates.length > 0) { %>
+            <% candidates.forEach(candidate => { %>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title"><%= candidate.name %></h5>
+                                <span class="badge bg-primary">AI Score: <%= candidate.aiScore || 0 %></span>
+                            </div>
+                            <h6 class="card-subtitle mb-2 text-muted"><%= candidate.email %></h6>
+                            <p class="card-text">
+                                <strong>Skills:</strong> <%= candidate.skills ? candidate.skills.join(', ') : 'No skills listed' %><br>
+                                <strong>Experience:</strong> <%= candidate.experience || 'No experience summary' %>
+                            </p>
+                            <% if (candidate.resumeUrl) { %>
+                                <a href="<%= candidate.resumeUrl %>" target="_blank" class="btn btn-outline-info btn-sm">View Resume</a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="col-12">
+                <div class="alert alert-info text-center">No developer profiles found.</div>
+            </div>
+        <% } %>
+    </div>
+</div>

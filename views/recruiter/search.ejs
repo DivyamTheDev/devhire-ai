@@ -1,0 +1,60 @@
+<div class="row mt-4">
+    <div class="col-md-10 m-auto">
+        <h2>Search Candidates</h2>
+        
+        <div class="card card-body mb-4">
+            <form action="/recruiter/search" method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <label for="skills" class="form-label">Skills (e.g. Node, React)</label>
+                    <input type="text" name="skills" id="skills" class="form-control" placeholder="Search by skill..." value="<%= query.skills || '' %>">
+                </div>
+                <div class="col-md-4">
+                    <label for="minScore" class="form-label">Min AI Score</label>
+                    <input type="number" name="minScore" id="minScore" class="form-control" placeholder="e.g. 70" value="<%= query.minScore || '' %>">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </form>
+        </div>
+
+        <% if (candidates.length > 0) { %>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <% candidates.forEach(candidate => { %>
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="card-title"><%= candidate.user.name %></h5>
+                                    <span class="badge bg-warning text-dark">Score: <%= candidate.aiScore.score %></span>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted"><%= candidate.user.email %></h6>
+                                <p class="card-text text-truncate"><%= candidate.bio %></p>
+                                <div class="mb-3">
+                                    <% candidate.skills.forEach(skill => { %>
+                                        <span class="badge bg-info text-dark me-1"><%= skill %></span>
+                                    <% }); %>
+                                </div>
+                                <% if (candidate.resumePath) { %>
+                                    <a href="<%= candidate.resumePath %>" target="_blank" class="btn btn-sm btn-outline-primary">View Resume</a>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else if (Object.keys(query).length > 0) { %>
+            <div class="text-center mt-5">
+                <p class="lead">No candidates found matching your criteria.</p>
+            </div>
+        <% } else { %>
+            <div class="text-center mt-5">
+                <p class="lead">Use the search box above to find talented developers.</p>
+            </div>
+        <% } %>
+        
+        <div class="mt-4">
+            <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>

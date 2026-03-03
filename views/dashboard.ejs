@@ -1,0 +1,108 @@
+<h1 class="mt-4">Dashboard</h1>
+<p class="lead mb-4">Welcome, <strong><%= user.name %></strong>!</p>
+
+<%- include('./partials/messages') %>
+
+<div class="row">
+    <% if (user.role === 'developer') { %>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-primary text-white text-center p-3 h-100">
+                <blockquote class="blockquote mb-0 h-100 d-flex flex-column justify-content-center">
+                    <p>AI Score</p>
+                    <footer class="display-4"><%= user.aiScore || '0' %></footer>
+                    <p class="small mt-2">Scale: 0-100</p>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-success text-white text-center p-3 h-100">
+                <blockquote class="blockquote mb-0 h-100 d-flex flex-column justify-content-center">
+                    <p>Applications</p>
+                    <footer class="display-4"><%= applicationsCount %></footer>
+                    <div class="mt-2">
+                        <a href="/developer/applications" class="btn btn-sm btn-light">View All</a>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-info text-white text-center p-3 h-100">
+                <blockquote class="blockquote mb-0 h-100 d-flex flex-column justify-content-center">
+                    <p>Quick Actions</p>
+                    <div class="d-grid gap-2 mt-2 px-3">
+                        <a href="/jobs" class="btn btn-sm btn-light">Browse Jobs</a>
+                        <a href="/developer/profile" class="btn btn-sm btn-light">Update Profile</a>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+
+        <% if (recentApplications && recentApplications.length > 0) { %>
+            <div class="col-12 mt-4">
+                <div class="card card-body">
+                    <h4>Recent Applications</h4>
+                    <ul class="list-group">
+                          <% recentApplications.forEach(app => { %>
+                              <li class="list-group-item d-flex justify-content-between align-items-center">
+                                  <% if (app.job) { %>
+                                      <%= app.job.title %> at <%= app.job.company %>
+                                  <% } else { %>
+                                      Job no longer available
+                                  <% } %>
+                                  <span class="badge bg-secondary"><%= app.date.toDateString() %></span>
+                              </li>
+                          <% }) %>
+                    </ul>
+                </div>
+            </div>
+        <% } %>
+
+    <% } else if (user.role === 'recruiter') { %>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-primary text-white text-center p-3 h-100">
+                <blockquote class="blockquote mb-0 h-100 d-flex flex-column justify-content-center">
+                    <p>Active Jobs</p>
+                    <footer class="display-4"><%= jobsCount %></footer>
+                    <div class="mt-2">
+                        <a href="/recruiter/dashboard" class="btn btn-sm btn-light">Manage Jobs</a>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-success text-white text-center p-3 h-100">
+                <blockquote class="blockquote mb-0 h-100 d-flex flex-column justify-content-center">
+                    <p>Total Applicants</p>
+                    <footer class="display-4"><%= applicationsCount %></footer>
+                    <div class="mt-2">
+                        <a href="/recruiter/dashboard" class="btn btn-sm btn-light">View Applicants</a>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-info text-white text-center p-3 h-100">
+                <blockquote class="blockquote mb-0 h-100 d-flex flex-column justify-content-center">
+                    <p>Quick Actions</p>
+                    <div class="d-grid gap-2 mt-2 px-3">
+                        <a href="/recruiter/dashboard" class="btn btn-sm btn-light">Post New Job</a>
+                        <a href="/recruiter/candidates" class="btn btn-sm btn-light">Find Talent</a>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<% if (user.role === 'developer' && (!user.skills || user.skills.length === 0)) { %>
+    <div class="alert alert-info mt-4">
+        <h4 class="alert-heading">Complete Your Profile!</h4>
+        <p>Aww yeah, you successfully registered. Now you should complete your profile to get discovered by recruiters and get your AI score.</p>
+        <hr>
+        <p class="mb-0">Head over to <a href="/developer/profile" class="alert-link">Profile Management</a> to add your skills and resume.</p>
+    </div>
+<% } %>
+
+<div class="mt-5 mb-5">
+    <a href="/auth/logout" class="btn btn-secondary">Logout</a>
+</div>

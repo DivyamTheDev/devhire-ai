@@ -1,0 +1,68 @@
+<div class="row mt-4">
+    <div class="col-md-8 m-auto">
+        <div class="card card-body">
+            <h2 class="text-center mb-4">Manage Developer Profile</h2>
+            <%- include('../partials/messages') %>
+            
+            <form action="/developer/profile" method="POST" enctype="multipart/form-data">
+                <div class="form-group mb-3">
+                    <label for="bio">Bio</label>
+                    <textarea name="bio" id="bio" class="form-control" rows="3" placeholder="Tell us about yourself"><%= user.bio || '' %></textarea>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="skills">Skills (Comma separated)</label>
+                    <input type="text" name="skills" id="skills" class="form-control" placeholder="Node.js, React, MongoDB" value="<%= user.skills ? user.skills.join(', ') : '' %>">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="experience">Experience Summary</label>
+                    <textarea name="experience" id="experience" class="form-control" rows="3" placeholder="2 years at Google, 1 year at Meta..."><%= user.experience || '' %></textarea>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="githubUsername">GitHub Username</label>
+                    <input type="text" name="githubUsername" id="githubUsername" class="form-control" placeholder="octocat" value="<%= user.githubUsername || '' %>">
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="portfolioUrl">Portfolio URL</label>
+                    <input type="url" name="portfolioUrl" id="portfolioUrl" class="form-control" placeholder="https://example.com" value="<%= user.portfolioUrl || '' %>">
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="resume">Resume (PDF, DOC, DOCX)</label>
+                    <input type="file" name="resume" id="resume" class="form-control">
+                    <% if (user.resumeUrl) { %>
+                        <div class="mt-2">
+                            <a href="<%= user.resumeUrl %>" target="_blank" class="btn btn-sm btn-outline-info">View Current Resume</a>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Save Profile</button>
+                    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </form>
+        </div>
+        
+        <% if (user.aiScore && user.aiScore > 0) { %>
+            <div class="card card-body mt-4">
+                <h4>AI Evaluation Score: <%= user.aiScore %>/100</h4>
+                <p class="text-muted"><small>Last evaluated: <%= new Date().toDateString() %></small></p>
+                <form action="/developer/evaluate" method="POST">
+                    <button type="submit" class="btn btn-warning">Re-evaluate Profile</button>
+                </form>
+            </div>
+        <% } else { %>
+             <div class="card card-body mt-4 text-center">
+                <h4>Get AI Evaluation</h4>
+                <p>Submit your profile and resume to get an AI-powered score and suggestions.</p>
+                <form action="/developer/evaluate" method="POST">
+                    <button type="submit" class="btn btn-warning">Evaluate My Profile</button>
+                </form>
+            </div>
+        <% } %>
+    </div>
+</div>

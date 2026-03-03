@@ -1,0 +1,68 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card card-body">
+                <h4>Post a New Job</h4>
+                <%- include('../partials/messages') %>
+                <form action="/recruiter/post-job" method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Job Title</label>
+                        <input type="text" name="title" id="title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="company" class="form-label">Company Name</label>
+                        <input type="text" name="company" id="company" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Job Description</label>
+                        <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="skillsRequired" class="form-label">Skills Required (Comma separated)</label>
+                        <input type="text" name="skillsRequired" id="skillsRequired" class="form-control" placeholder="Node.js, MongoDB, React" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="experienceRequired" class="form-label">Experience Required</label>
+                        <input type="text" name="experienceRequired" id="experienceRequired" class="form-control" placeholder="2+ years" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Post Job</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card card-body">
+                <h4>Your Job Postings</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Company</th>
+                                <th>Posted On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (jobs.length > 0) { %>
+                                <% jobs.forEach(job => { %>
+                                    <tr>
+                                        <td><%= job.title %></td>
+                                        <td><%= job.company %></td>
+                                        <td><%= job.createdAt.toDateString() %></td>
+                                        <td>
+                                            <a href="/recruiter/applicants/<%= job._id %>" class="btn btn-sm btn-info">View Applicants</a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4" class="text-center">No jobs posted yet.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
