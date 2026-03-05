@@ -1,46 +1,75 @@
-const OpenAI = require('openai');
-const dotenv = require('dotenv');
+const Groq = require("groq-sdk");
+require("dotenv").config();
 
-dotenv.config();
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY
 });
 
-exports.evaluateProfile = async (profileData) => {
-    const { name, bio, skills, githubUsername } = profileData;
+async function evaluateProfile(profileData) {
 
-    const prompt = `
-        Evaluate the following software developer profile for a recruitment platform.
-        Provide a technical score from 0 to 100 and a brief constructive feedback (max 3 sentences).
-        
-        Developer Name: ${name}
-        Bio: ${bio}
-        Skills: ${skills.join(', ')}
-        GitHub: ${githubUsername || 'Not provided'}
-        
-        Respond ONLY in JSON format like this:
-        {
-            "score": 85,
-            "feedback": "Great focus on backend technologies. Adding more frontend projects could broaden opportunities. Strong use of Node.js."
-        }
-    `;
+  const { name, bio, skills, githubUsername } = profileData;
 
-    try {
-        const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [
-                { role: "system", content: "You are an expert technical recruiter and developer advocate." },
-                { role: "user", content: prompt }
-            ],
-            temperature: 0.7,
-            response_format: { type: "json_object" }
-        });
+  const prompt = `
+Evaluate the following developer profile.
 
-        const result = JSON.parse(response.choices[0].message.content);
-        return result;
-    } catch (err) {
-        console.error('AI Evaluation Error:', err);
-        throw err;
-    }
+Name: ${name}
+Bio: ${bio}
+Skills: ${skills.join(", ")}
+Github: ${githubUsername || "Not provided"}
+
+Return JSON:
+
+{
+ "score": number,
+ "feedback": "short recruiter feedback"
+}
+`;
+
+  const response = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.7
+  });
+
+  const content = response.choices[0].message.content;
+   try {
+
+    const parsed = JSON.parse(content.match(/\{[\s\S]*\}/)[0]);
+    return parsed;
+
+  } catch (error) {
+
+    console.error("AI JSON parse failed:", content);
+
+    return {
+      score: 70,
+      feedback: "AI evaluation succeeded but parsing failed."
+    };
+}
+}
+
+
+async function summarizeResume(skills, bio) {
+
+  const response = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: "user",
+        content: `
+Summarize this developer in 2 sentences for a recruiter.
+
+Bio: ${bio}
+Skills: ${skills.join(", ")}
+`
+      }
+    ]
+  });
+
+  return response.choices[0].message.content;
+}
+
+module.exports = {
+  evaluateProfile,
+  summarizeResume
 };

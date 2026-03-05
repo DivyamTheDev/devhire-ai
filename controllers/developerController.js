@@ -75,13 +75,15 @@ exports.evaluateProfile = async (req, res) => {
         res.redirect('/developer/profile');
     }
 };
-
 // Apply for a job
 exports.applyJob = async (req, res) => {
     try {
+
         const user = await User.findById(req.user.id);
+        
+
         if (!user.skills || user.skills.length === 0) {
-            req.flash('error_msg', 'Please complete your profile (add skills) before applying');
+            req.flash('error_msg', 'Please complete your profile before applying');
             return res.redirect('/developer/profile');
         }
 
@@ -95,20 +97,40 @@ exports.applyJob = async (req, res) => {
             return res.redirect('/jobs');
         }
 
+        // 🔥 AI PROFILE EVALUATION
+        const aiEvaluation = await aiService.evaluateProfile({
+            name: user.name,
+            bio: user.bio,
+            skills: user.skills,
+            githubUsername: user.githubUsername
+        });
+
+        // 🔥 AI SUMMARY
+        const aiSummary = await aiService.summarizeResume(
+            user.skills,
+            user.bio
+        );
+
         const newApplication = new Application({
             job: req.params.jobId,
-            developer: req.user.id
+            developer: req.user.id,
+
+            // Save AI results
+            aiScore: aiEvaluation.score,
+            aiFeedback: aiEvaluation.feedback,
+            aiSummary: aiSummary
         });
 
         await newApplication.save();
+
         req.flash('success_msg', 'Application submitted successfully!');
         res.redirect('/developer/applications');
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
     }
 };
-
 // Get all applications for developer
 exports.getApplications = async (req, res) => {
     try {
