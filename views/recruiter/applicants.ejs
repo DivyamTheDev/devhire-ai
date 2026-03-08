@@ -17,7 +17,17 @@
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="card-title"><%= applicant.name %></h5>
                                 <span class="badge bg-primary">AI Score: <%= applicant.aiScore || 0 %></span>
+                                <span class="badge bg-success">
+                                    Match Score: <%= application.matchScore || 0 %>% </span>
                             </div>
+     <% if (applicant.aiSummary) { %>
+
+<div class="mt-2 p-2 border rounded bg-light">
+    <strong>AI Summary:</strong>
+    <p class="mb-0"><%= applicant.aiSummary %></p>
+</div>
+
+<% } %>                       
                             <h6 class="card-subtitle mb-2 text-muted"><%= applicant.email %></h6>
                             <p class="card-text">
                                 <strong>Skills:</strong> <%= applicant.skills ? applicant.skills.join(', ') : 'No skills listed' %><br>

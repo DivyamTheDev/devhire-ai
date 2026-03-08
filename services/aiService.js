@@ -1,4 +1,6 @@
 const Groq = require("groq-sdk");
+const pdfParse = require('pdf-parse');
+const fs = require('fs');
 require("dotenv").config();
 
 const groq = new Groq({
@@ -68,8 +70,89 @@ Skills: ${skills.join(", ")}
 
   return response.choices[0].message.content;
 }
+async function analyzeResume(filePath) {
+
+  const dataBuffer = fs.readFileSync(filePath);
+  const pdfData = await pdfParse(dataBuffer);
+
+  const resumeText = pdfData.text;
+
+  const response = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: "user",
+        content: `
+Analyze this resume and return JSON:
+
+{
+ "score": number,
+ "summary": "short summary",
+ "strengths": "strengths",
+ "weakness": "weak areas"
+}
+
+Resume:
+${resumeText}
+`
+      }
+    ]
+  });
+
+   const content = response.choices[0].message.content;
+
+  try {
+    return JSON.parse(content.match(/\{[\s\S]*\}/)[0]);
+  } catch (err) {
+    console.error("AI JSON parse failed:", content);
+
+    return {
+      score: 70,
+      summary: "AI analysis completed but parsing failed."
+    };
+  }
+}
+
+async function matchCandidate(jobDescription, skills) {
+
+  const response = await groq.chat.completions.create({
+    model: "llama-3.3-70b-versatile",
+    messages: [
+      {
+        role: "user",
+        content: `
+Job description:
+${jobDescription}
+
+Candidate skills:
+${skills.join(", ")}
+
+Return JSON:
+
+{
+ "matchScore": number,
+ "reason": "short explanation"
+}
+`
+      }
+    ]
+  });
+
+  const content = response.choices[0].message.content;
+
+  try {
+    return JSON.parse(content.match(/\{[\s\S]*\}/)[0]);
+  } catch {
+    return {
+      matchScore: 70,
+      reason: "AI analysis completed but parsing failed"
+    };
+  }
+}
 
 module.exports = {
   evaluateProfile,
-  summarizeResume
+  summarizeResume,
+  analyzeResume,
+  matchCandidate
 };

@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const Application = require('../models/Application');
 const aiService = require('../services/aiService');
+const path = require('path');
+
 
 // Get current developer profile
 exports.getProfile = async (req, res) => {
@@ -30,9 +32,20 @@ exports.postProfile = async (req, res) => {
         updateFields.skills = skills.split(',').map(skill => skill.trim());
     }
 
-    if (req.file) {
-        updateFields.resumeUrl = '/uploads/resumes/' + req.file.filename;
-    }
+  if (req.file) {
+
+    const resumePath = path.join(
+        __dirname,
+        "../public/uploads/resumes/",
+        req.file.filename
+    );
+
+    const analysis = await aiService.analyzeResume(resumePath);
+
+    updateFields.resumeUrl = '/uploads/resumes/' + req.file.filename;
+    updateFields.aiScore = analysis.score;
+    updateFields.aiSummary = analysis.summary;
+}
 
     try {
         await User.findByIdAndUpdate(
@@ -80,7 +93,7 @@ exports.applyJob = async (req, res) => {
     try {
 
         const user = await User.findById(req.user.id);
-        
+        const Job = require('../models/Job');
 
         if (!user.skills || user.skills.length === 0) {
             req.flash('error_msg', 'Please complete your profile before applying');
@@ -114,6 +127,7 @@ exports.applyJob = async (req, res) => {
         const newApplication = new Application({
             job: req.params.jobId,
             developer: req.user.id,
+           
 
             // Save AI results
             aiScore: aiEvaluation.score,

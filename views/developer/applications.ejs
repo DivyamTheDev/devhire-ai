@@ -6,48 +6,79 @@
 
         <% if (applications.length > 0) { %>
             <div class="list-group">
+
                 <% applications.forEach(app => { %>
+
                     <div class="list-group-item mb-3 border rounded">
+
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1 text-primary"><%= app.job.title %></h5>
-                            <small class="text-muted">Applied on <%= app.date.toDateString() %></small>
+                            <small class="text-muted">
+                                Applied on <%= app.date.toDateString() %>
+                            </small>
                         </div>
-                        <p class="mb-1"><strong>Company:</strong> <%= app.job.company %></p>
+
+                        <p class="mb-1">
+                            <strong>Company:</strong> <%= app.job.company %>
+                        </p>
+
                         <div class="mt-2">
-                            Status: <span class="badge bg-<%= app.status === 'pending' ? 'warning' : (app.status === 'rejected' ? 'danger' : 'success') %> text-capitalize"><%= app.status %></span>
-                            <div class="mt-2">
 
-    <% if (app.aiScore) { %>
+                            Status:
+                            <span class="badge bg-<%= app.status === 'pending' ? 'warning' : (app.status === 'rejected' ? 'danger' : 'success') %> text-capitalize">
+                                <%= app.status %>
+                            </span>
 
-        <div class="mt-3 p-3 border rounded bg-light">
-
-            <strong>AI Match Score:</strong>
-            <span class="badge bg-primary"><%= app.aiScore %>%</span>
-
-            <p class="mt-2"><strong>AI Feedback:</strong>
-            <%= app.aiFeedback %></p>
-
-            <p><strong>AI Summary:</strong>
-            <%= app.aiSummary %></p>
-
-        </div>
-
-    <% } %>
-
-</div>
                         </div>
+
+                        <!-- AI SECTION -->
+                        <% if (app.aiScore || app.aiSummary || app.aiFeedback) { %>
+
+                        <div class="mt-3 p-3 border rounded bg-light">
+
+                            <% if (app.aiScore) { %>
+                                <strong>AI Match Score:</strong>
+                                <span class="badge bg-primary">
+                                    <%= app.aiScore %>%
+                                </span>
+                            <% } %>
+
+                            <% if (app.aiFeedback) { %>
+                                <p class="mt-2">
+                                    <strong>AI Feedback:</strong><br>
+                                    <%= app.aiFeedback %>
+                                </p>
+                            <% } %>
+
+                            <% if (app.aiSummary) { %>
+                                <p class="mt-2">
+                                    <strong>AI Summary:</strong><br>
+                                    <%= app.aiSummary %>
+                                </p>
+                            <% } %>
+
+                        </div>
+
+                        <% } %>
+
                     </div>
+
                 <% }); %>
+
             </div>
+
         <% } else { %>
+
             <div class="text-center mt-5">
                 <p class="lead">You haven't applied for any jobs yet.</p>
                 <a href="/jobs" class="btn btn-primary">Browse Jobs</a>
             </div>
+
         <% } %>
         
         <div class="mt-4">
             <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
         </div>
+
     </div>
 </div>

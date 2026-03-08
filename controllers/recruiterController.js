@@ -57,8 +57,8 @@ exports.getCandidates = async (req, res) => {
 exports.getApplicants = async (req, res) => {
     try {
         const applications = await Application.find({ job: req.params.jobId })
-            .populate('developer', 'name email skills aiScore experience resumeUrl')
-            .sort({ date: -1 });
+            .populate('developer', 'name email skills aiScore aiSummary experience resumeUrl')
+            .sort({ matchScore: -1 });
         
         const job = await Job.findById(req.params.jobId);
 

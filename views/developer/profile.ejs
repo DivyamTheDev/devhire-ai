@@ -46,6 +46,17 @@
                 </div>
             </form>
         </div>
+        <% if(user.aiSummary){ %>
+
+<div class="alert alert-info mt-3">
+<h5>AI Resume Analysis</h5>
+
+<p><strong>Score:</strong> <%= user.aiScore %></p>
+<p><%= user.aiSummary %></p>
+
+</div>
+
+<% } %>
         
         <% if (user.aiScore && user.aiScore > 0) { %>
             <div class="card card-body mt-4">
