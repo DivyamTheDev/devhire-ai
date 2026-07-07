@@ -22,7 +22,7 @@ Github: ${githubUsername || "Not provided"}
 Return JSON:
 
 {
- "score": number,
+ "score": number (0 to 100),
  "feedback": "short recruiter feedback"
 }
 `;
@@ -90,7 +90,7 @@ async function analyzeResume(dataBuffer) {
 Analyze this resume and return JSON:
 
 {
- "score": number,
+ "score": number (0 to 100),
  "summary": "short summary",
  "strengths": "strengths",
  "weakness": "weak areas"
@@ -134,7 +134,7 @@ ${skills.join(", ")}
 Return JSON:
 
 {
- "matchScore": number,
+ "matchScore": number (0 to 100),
  "reason": "short explanation"
 }
 `
