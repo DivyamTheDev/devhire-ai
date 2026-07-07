@@ -1,25 +1,107 @@
-<div class="jumbotron text-center bg-light p-5 rounded">
-    <h1 class="display-4">Welcome to DevHire AI</h1>
-    <p class="lead">The Intelligent Developer Hiring & Skill Evaluation Platform</p>
-    <hr class="my-4">
-    <p>Empowering recruiters with AI-driven insights and helping developers showcase their true potential.</p>
-    <div class="mt-4">
-        <a class="btn btn-primary btn-lg" href="/auth/register" role="button">Get Started as Developer</a>
-        <a class="btn btn-secondary btn-lg" href="/auth/register?role=recruiter" role="button">Join as Recruiter</a>
+<% if (!user) { %>
+    <!-- GUEST LANDING VIEW -->
+    <div class="jumbotron-modern text-center p-5 rounded mb-5">
+        <h1 class="display-4 text-white">Welcome to DevHire AI 🚀</h1>
+        <p class="lead text-light-50 mt-3 fs-4">The Intelligent Developer Hiring & AI-Powered Skill Evaluation Platform</p>
+        <hr class="my-4 border-light opacity-25">
+        <p class="text-light-75 max-w-2xl mx-auto fs-5">
+            Empowering recruiters with automated, deep AI insights and helping talented developers showcase their verified skills objectively. 
+        </p>
+        <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
+            <a class="btn btn-primary btn-lg px-4" href="/auth/register"><i class="fas fa-user-plus me-2"></i>Get Started as Developer</a>
+            <a class="btn btn-secondary btn-lg px-4" href="/auth/register?role=recruiter"><i class="fas fa-briefcase me-2"></i>Join as Recruiter</a>
+        </div>
     </div>
-</div>
 
-<div class="row mt-5">
-    <div class="col-md-4">
-        <h3>AI Evaluation</h3>
-        <p>Get your profile and resume analyzed by our advanced AI for better ranking.</p>
+    <div class="row g-4 mt-2">
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center border-0 bg-white">
+                <div class="rounded-circle bg-primary bg-opacity-10 p-3 mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="fas fa-robot text-primary fs-3"></i>
+                </div>
+                <h3>AI Resume Evaluation</h3>
+                <p class="text-muted">Upload your resume to get an instant, objective analysis of your skills, strengths, weaknesses, and a recruiter score.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center border-0 bg-white">
+                <div class="rounded-circle bg-success bg-opacity-10 p-3 mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="fas fa-bullseye text-success fs-3"></i>
+                </div>
+                <h3>Smart Skill Matching</h3>
+                <p class="text-muted">Our AI matches developers directly with posted jobs based on verified project experience and requirements compatibility.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center border-0 bg-white">
+                <div class="rounded-circle bg-info bg-opacity-10 p-3 mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="fas fa-magnifying-glass text-info fs-3"></i>
+                </div>
+                <h3>Candidate Discovery</h3>
+                <p class="text-muted">Recruiters can filter candidates using our AI scoreboards, find talent with verified summaries, and manage applications easily.</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h3>Skill Assessments</h3>
-        <p>Take technical challenges to validate your expertise and earn badges.</p>
+
+<% } else if (user.role === 'recruiter') { %>
+    <!-- RECRUITER ACTIONS VIEW -->
+    <div class="text-center mb-5">
+        <h1 class="display-5">Recruiter Command Center</h1>
+        <p class="text-muted">Welcome back, <%= user.name %>! Manage jobs, candidates, and AI hirings from here.</p>
     </div>
-    <div class="col-md-4">
-        <h3>Smart Hiring</h3>
-        <p>Recruiters can find the best talent using our intelligent filtering system.</p>
+
+    <div class="row g-4 justify-content-center max-w-4xl mx-auto">
+        <div class="col-md-4">
+            <a href="/recruiter/dashboard" class="action-card">
+                <i class="fas fa-folder-plus text-primary"></i>
+                <h3>Upload New Jobs</h3>
+                <p class="text-muted small mb-0">Post open positions and requirements to find matches.</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/recruiter/candidates" class="action-card">
+                <i class="fas fa-user-tie text-success"></i>
+                <h3>Find New Talent</h3>
+                <p class="text-muted small mb-0">Browse developers and discover talent by AI score.</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/auth/logout" class="action-card">
+                <i class="fas fa-right-from-bracket text-danger"></i>
+                <h3>Logout</h3>
+                <p class="text-muted small mb-0">Securely sign out of your recruiter session.</p>
+            </a>
+        </div>
     </div>
-</div>
+
+<% } else if (user.role === 'developer') { %>
+    <!-- DEVELOPER ACTIONS VIEW -->
+    <div class="text-center mb-5">
+        <h1 class="display-5">Developer Control Panel</h1>
+        <p class="text-muted">Welcome back, <%= user.name %>! Keep your profile updated and apply for job openings.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center max-w-4xl mx-auto">
+        <div class="col-md-4">
+            <a href="/dashboard" class="action-card">
+                <i class="fas fa-chart-line text-primary"></i>
+                <h3>Go to Dashboard</h3>
+                <p class="text-muted small mb-0">Check application status, profile stats, and scores.</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/jobs" class="action-card">
+                <i class="fas fa-search-dollar text-success"></i>
+                <h3>Find Jobs</h3>
+                <p class="text-muted small mb-0">Browse open dev positions and apply with AI screening.</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/auth/logout" class="action-card">
+                <i class="fas fa-right-from-bracket text-danger"></i>
+                <h3>Logout</h3>
+                <p class="text-muted small mb-0">Securely sign out of your developer session.</p>
+            </a>
+        </div>
+    </div>
+<% } %>

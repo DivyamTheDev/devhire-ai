@@ -4,7 +4,7 @@ const { ensureAuthenticated, forwardAuthenticated } = require('../middlewares/au
 const Job = require('../models/Job');
 
 // Welcome Page
-router.get('/', forwardAuthenticated, (req, res) => {
+router.get('/', (req, res) => {
     res.render('index', { title: 'Welcome to DevHire AI' });
 });
 
