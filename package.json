@@ -8,7 +8,9 @@
     "dev": "nodemon --watch server.js --watch controllers --watch routes --watch models --watch middlewares --watch config server.js"
   },
   "dependencies": {
+    "axios": "^1.13.6",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.41.0",
     "connect-flash": "^0.1.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
@@ -22,7 +24,8 @@
     "openai": "^4.58.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.1",
+    "streamifier": "^0.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"

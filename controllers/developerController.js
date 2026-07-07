@@ -1,3 +1,4 @@
+
 const User = require('../models/User');
 const Application = require('../models/Application');
 const aiService = require('../services/aiService');
@@ -33,19 +34,20 @@ exports.postProfile = async (req, res) => {
     }
 
   if (req.file) {
+    try {
+      const analysis = await aiService.analyzeResume(req.file.buffer);
+      const cloudinaryService = require('../services/cloudinaryService');
+      const uploadResult = await cloudinaryService.uploadToCloudinary(req.file.buffer, req.file.originalname);
 
-    const resumePath = path.join(
-        __dirname,
-        "../public/uploads/resumes/",
-        req.file.filename
-    );
-
-    const analysis = await aiService.analyzeResume(resumePath);
-
-    updateFields.resumeUrl = '/uploads/resumes/' + req.file.filename;
-    updateFields.aiScore = analysis.score;
-    updateFields.aiSummary = analysis.summary;
-}
+      updateFields.resumeUrl = uploadResult.secure_url;
+      updateFields.aiScore = analysis.score;
+      updateFields.aiSummary = analysis.summary;
+    } catch (uploadErr) {
+      console.error('Failed to parse or upload resume:', uploadErr);
+      req.flash('error_msg', 'Failed to process resume. Please try again.');
+      return res.redirect('/developer/profile');
+    }
+  }
 
     try {
         await User.findByIdAndUpdate(
@@ -110,7 +112,7 @@ exports.applyJob = async (req, res) => {
             return res.redirect('/jobs');
         }
 
-        // 🔥 AI PROFILE EVALUATION
+       
         const aiEvaluation = await aiService.evaluateProfile({
             name: user.name,
             bio: user.bio,
@@ -118,7 +120,7 @@ exports.applyJob = async (req, res) => {
             githubUsername: user.githubUsername
         });
 
-        // 🔥 AI SUMMARY
+    
         const aiSummary = await aiService.summarizeResume(
             user.skills,
             user.bio

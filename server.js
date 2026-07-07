@@ -1,4 +1,5 @@
 require('dotenv').config();
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const express = require('express');
 const mongoose = require('mongoose');
 const dns = require('dns');
@@ -34,7 +35,9 @@ const dbURI = process.env.MONGODB_URI;
 console.log("DEBUG MONGO URI =", dbURI ? '[REDACTED]' : dbURI);
 if (dbURI) {
     mongoose.set('strictQuery', false);
-    mongoose.connect(dbURI)
+    mongoose.connect(dbURI, {
+        tlsAllowInvalidCertificates: true
+    })
         .then(() => console.log('MongoDB Connected'))
         .catch(err => console.error('MongoDB Connection Error:', err));
 
@@ -103,3 +106,5 @@ const HOST = '0.0.0.0';
 app.listen(PORT, HOST, () => {
     console.log(`Server running on http://${HOST}:${PORT}`);
 });
+
+module.exports = app;

@@ -70,12 +70,16 @@ Skills: ${skills.join(", ")}
 
   return response.choices[0].message.content;
 }
-async function analyzeResume(filePath) {
+async function analyzeResume(dataBuffer) {
 
-  const dataBuffer = fs.readFileSync(filePath);
-  const pdfData = await pdfParse(dataBuffer);
-
-  const resumeText = pdfData.text;
+  let resumeText = "";
+  try {
+    const pdfData = await pdfParse(dataBuffer);
+    resumeText = pdfData.text;
+  } catch (err) {
+    console.error("PDF Parsing failed or unsupported file format:", err);
+    resumeText = "Could not extract resume text from document buffer. Perform evaluation based on other available fields.";
+  }
 
   const response = await groq.chat.completions.create({
     model: "llama-3.3-70b-versatile",
