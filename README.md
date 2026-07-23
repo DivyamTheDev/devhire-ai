@@ -84,4 +84,14 @@ This project is configured out-of-the-box for serverless deployment on Vercel:
 
 ---
 
+## ⭐ Support & Feedback
+
+If you find this project useful or interesting, please consider:
+* Giving it a **Star** on GitHub!
+* Sharing your feedback or suggestions by opening an Issue.
+
+Your support helps improve the project!
+
+---
+
 *Made with passion by **Divyam***
